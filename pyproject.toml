@@ -9,6 +9,10 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "django>=6.1.1",
+    "djangorestframework>=3.18.1",
+    "djangorestframework-simplejwt>=5.5.1",
+    "psycopg2-binary>=2.9.13",
+    "python-dotenv>=1.2.3",
 ]
 
 [project.scripts]
@@ -17,3 +21,5 @@ smart-waste-managment = "smart_waste_managment:main"
 [build-system]
 requires = ["uv_build>=0.12.7,<0.13.0"]
 build-backend = "uv_build"
+
+
