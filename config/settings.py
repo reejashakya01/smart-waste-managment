@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     #third party apps
     'rest_framework',
-    'apps.address',
+    'apps.address','apps.waste'
 ]
 
 MIDDLEWARE = [

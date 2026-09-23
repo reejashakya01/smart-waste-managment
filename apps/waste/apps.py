@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class AccountsConfig(AppConfig):
-    name = 'accounts'
+class WasteConfig(AppConfig):
+    name = 'waste'
+    name = 'apps.waste'
