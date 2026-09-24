@@ -78,3 +78,38 @@ class WasteCategoryAdmin(admin.ModelAdmin):
             },
         ),
     )
+    
+from django.contrib import admin
+
+from .models import WasteMaterial
+
+
+@admin.register(WasteMaterial)
+class WasteMaterialAdmin(admin.ModelAdmin):
+    list_display = (
+        "category",
+        "unit",
+        "estimated_rate",
+        "is_active",
+    )
+
+    list_filter = (
+        "unit",
+        "is_active",
+        "category",
+    )
+
+    search_fields = (
+        "category__name",
+    )
+
+    list_editable = (
+        "estimated_rate",
+        "is_active",
+    )
+
+    ordering = (
+        "category__name",
+    )
+
+    list_per_page = 25

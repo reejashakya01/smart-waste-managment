@@ -17,3 +17,24 @@ class WasteCategory(models.Model):
 
     class Meta:
         db_table = "waste_category"
+    
+
+class WasteUnit(models.TextChoices):
+    KG = "kg"
+    GRAM = "g"
+    LITER = "l"
+    PIECE = "pc"
+
+
+class WasteMaterial(models.Model):
+    category = models.ForeignKey(WasteCategory, on_delete=models.RESTRICT)
+    unit  = models.CharField(max_length=5, choices=WasteUnit.choices)
+    estimated_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return f'{self.category.name}'
+
+    class Meta:
+        db_table = "waste-material"
