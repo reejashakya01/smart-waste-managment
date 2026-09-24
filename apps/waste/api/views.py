@@ -65,3 +65,45 @@ class WasteUpdateDetailDeleteView(GenericAPIView):
         return Response({
             "message":"Waste Category deleted successfully"
         }, status.HTTP_200_OK)
+
+class WasteCategoryCreateView(GenericAPIView):
+    queryset = WasteCategory.objects.all()
+    serializer_class = WasteCategorySerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(
+                {
+                    "message": "Waste Category created successfully",
+                    "data": serializer.data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+class WasteCategoryDeleteView(GenericAPIView):
+    queryset = WasteCategory.objects.all()
+
+    def delete(self, request, pk):
+        waste_category = get_object_or_404(
+            WasteCategory,
+            id=pk
+        )
+
+        waste_category.delete()
+
+        return Response(
+            {
+                "message": "Waste Category deleted successfully"
+            },
+            status=status.HTTP_200_OK,
+        )
