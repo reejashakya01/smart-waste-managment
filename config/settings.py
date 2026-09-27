@@ -15,6 +15,8 @@ import os
 from dotenv import load_dotenv
 from datetime import timedelta
 
+from rest_framework import apps
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,7 +45,8 @@ INSTALLED_APPS = [
     'apps.accounts',
     #third party apps
     'rest_framework',
-    'apps.address','apps.waste'
+    'apps.address','apps.waste',
+    'apps.waste_collection'
 ]
 
 MIDDLEWARE = [
