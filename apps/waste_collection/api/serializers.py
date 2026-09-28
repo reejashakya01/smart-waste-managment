@@ -4,6 +4,7 @@ from apps.waste_collection.models import (
     CollectionRequest,
     CollectionRequestItem,
 )
+from apps.waste_collection.api.service import create_collection_activity_log
 import time
 
 class CollectionRequestItemSerializer(serializers.ModelSerializer):
@@ -62,5 +63,10 @@ class UserCollectionRequestSerializer(serializers.ModelSerializer):
             item['collection_request'] = collection_request
             collection_item = CollectionRequestItem(**item)
             collection_item.save()
+            create_collection_activity_log(
+            collection=collection_request,
+            message="Requested for collection"
+        )
+
 
         return validated_data
