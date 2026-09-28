@@ -15,4 +15,18 @@ class UserCollectionRequestView(GenericAPIView):
     def get(self, request,):
         waste_collection = CollectionRequest.objects.all()
         serializer = self.get_serializer(waste_collection, many=True)
-        return Response(serializer.error)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        data = request.data
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Collection  requested successfully",
+                    "data": serializer.data,
+                },
+                status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

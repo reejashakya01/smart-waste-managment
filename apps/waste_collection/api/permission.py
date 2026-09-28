@@ -10,7 +10,8 @@ class IsCustomerOrAdmin(BasePermission):
 
     def has_permission(self, request, view):
         # return bool(request.user and request.user.is_authenticated)
-        if request.user.role == Role.CUSTOMER:
+        
+        if request.user.role != Role.COLLECTOR:
             return True
         else:
             return False
