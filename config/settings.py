@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 from datetime import timedelta
 
+import drf_spectacular
 from rest_framework import apps
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,9 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.accounts',
+    
     #third party apps
     'rest_framework',
-    'apps.address','apps.waste',
+    'drf_spectacular',
+    
+    
+    'apps.address',
+    'apps.waste',
     'apps.waste_collection'
 ]
 
@@ -139,7 +145,10 @@ STATIC_URL = 'static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
 }
 
 # Email
