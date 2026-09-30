@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     
     'apps.address',
     'apps.waste',
-    'apps.waste_collection'
+    'apps.waste_collection',
+    'apps.collector'
 ]
 
 MIDDLEWARE = [
