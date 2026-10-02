@@ -26,6 +26,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         if phone_number !=10:
             raise ValidationError("Length of phone number should be 10")
         return phone_number
+    
+    def validate_phone_number(self, phone_number):
+        if len(str(phone_number)) !=10:
+            raise ValidationError("Length of phone number should be 10")
+        return phone_number
 
     def create(self, validated_data):
         validated_data.pop('confirm_password')
