@@ -29,7 +29,8 @@ urlpatterns = [
     path('api/accounts/',include('apps.accounts.api.urls')),
     path('api/address/',include('apps.address.api.urls')),
     path("api/waste/", include("apps.waste.api.urls")),
-   path("api/waste-collection/", include("apps.waste_collection.api.urls")),
+    path("api/waste-collection/", include("apps.waste_collection.api.urls")),
+    path('api/collector/', include('apps.collector.api.urls')),
     path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
      # api documentation

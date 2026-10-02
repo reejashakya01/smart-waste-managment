@@ -18,3 +18,11 @@ class CollectionAssignment(models.Model):
     assigned_at = models.DateTimeField(null=True, blank=True)
     accepted_at = models.DateTimeField(null=True, blank=True)
     started_at = models.DateTimeField(null=True, blank=True)
+
+class Meta:        
+    db_table = "collection-assignment" 
+    
+    
+def __str__(self):   
+    return f"{self.collection_request} - {self.collector} - {self.status}"
+
