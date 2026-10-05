@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from django.db import transaction
+import time
+
 from apps.collector.api.services import create_collector_assignment
 from apps.waste_collection.api.service import create_collection_activity_log
 from apps.waste_collection.models import (
@@ -6,7 +9,6 @@ from apps.waste_collection.models import (
     CollectionRequest,
     CollectionRequestItem,
 )
-import time
 
 
 class CollectionRequestItemSerializer(serializers.ModelSerializer):
@@ -26,6 +28,35 @@ class CollectionRequestItemSerializer(serializers.ModelSerializer):
         max_digits=10,
         decimal_places=2,
         read_only=True
+    )
+
+    collection_request = serializers.PrimaryKeyRelatedField(
+        read_only=True
+    )
+
+    class Meta:
+        model = CollectionRequestItem
+        fields = "__all__"
+
+
+class CollectionCompletedItemSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    estimated_amount = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        read_only=True
+    )
+
+    estimated_quantity = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        read_only=True
+    )
+
+    actual_quantity = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2
     )
 
     collection_request = serializers.PrimaryKeyRelatedField(
@@ -104,3 +135,58 @@ class UserCollectionRequestSerializer(serializers.ModelSerializer):
         )
 
         return collection_request
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+
+        if instance.status == CollectionStatus.COMPLETED:
+            raise serializers.ValidationError(
+                {"items": "Item is already completed"}
+            )
+
+        items = validated_data.pop("items")
+
+        total_amount = 0
+        total_quantity = 0
+
+        for item in items:
+            item_id = item.get("id")
+
+            try:
+                collection_item = instance.items.get(id=item_id)
+
+            except CollectionRequestItem.DoesNotExist:
+                raise serializers.ValidationError(
+                    {
+                        "items": f" Item {item_id} does belong to collection request or ID not found"
+                    }
+                )
+
+            collection_item.actual_quantity = item["actual_quantity"]
+
+            collection_item.actual_amount = (
+                item["waste_category"].base_rate
+                * item["actual_quantity"]
+            )
+
+            collection_item.reward_points = (
+                (item["actual_quantity"] // 1)
+                * item["waste_category"].reward_points_per_kg
+            )
+
+            collection_item.waste_category = item["waste_category"]
+
+            total_amount += float(collection_item.actual_amount)
+            total_quantity += float(collection_item.actual_quantity)
+
+            collection_item.save()
+
+        print("--------TA", total_amount)
+        print("--------TQ", total_quantity)
+
+        instance.final_amount = total_amount
+        instance.final_weight = total_quantity
+        instance.status = CollectionStatus.COMPLETED
+        instance.save()
+
+        return validated_data

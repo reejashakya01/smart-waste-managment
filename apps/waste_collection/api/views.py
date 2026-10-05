@@ -23,10 +23,7 @@ class UserCollectionRequestView(GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(
-                {
-                    "message": "Collection  requested successfully",
-                    "data": serializer.data,
-                },
+                {"message": "Collection  updated successfully"},
                 status.HTTP_201_CREATED,
             )
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
